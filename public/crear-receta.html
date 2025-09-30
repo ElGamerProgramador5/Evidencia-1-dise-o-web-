@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Receta - Gestión de Consultas</title>
+    <!-- Choices.js para selectores con búsqueda -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -25,6 +28,10 @@
                     <label for="motivo">Motivo de la consulta</label>
                     <textarea id="motivo" name="motivo" rows="3"></textarea>
                 </div>
+                <div class="input-group">
+                    <label for="receta-fecha">Fecha de la Receta</label>
+                    <input type="date" id="receta-fecha" name="fecha" required>
+                </div>
                 
                 <h3>Medicamentos</h3>
                 <div id="medicamentos-container">
@@ -45,7 +52,19 @@
             <form id="modal-add-paciente-form">
                 <div class="input-group">
                     <label for="modal-paciente-nombre">Nombre Completo</label>
-                    <input type="text" id="modal-paciente-nombre" required>
+                    <input type="text" id="modal-paciente-nombre" name="nombre" required>
+                </div>
+                <div class="input-group">
+                    <label for="modal-paciente-fecha-nacimiento">Fecha de Nacimiento</label>
+                    <input type="date" id="modal-paciente-fecha-nacimiento" name="fecha_nacimiento">
+                </div>
+                <div class="input-group">
+                    <label for="modal-paciente-genero">Género</label>
+                    <select id="modal-paciente-genero" name="genero">
+                        <option value="Femenino">Femenino</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
                 </div>
                 <button type="submit">Guardar Paciente</button>
             </form>

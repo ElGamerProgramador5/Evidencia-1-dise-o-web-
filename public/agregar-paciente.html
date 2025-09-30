@@ -20,6 +20,18 @@
                 <label for="nombre">Nombre Completo</label>
                 <input type="text" id="nombre" name="nombre" required>
             </div>
+            <div class="input-group">
+                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento">
+            </div>
+            <div class="input-group">
+                <label for="genero">Género</label>
+                <select id="genero" name="genero">
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
             <button type="submit">Agregar Paciente</button>
         </form>
         <div id="message"></div>

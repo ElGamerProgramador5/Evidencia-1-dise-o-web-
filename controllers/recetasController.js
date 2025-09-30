@@ -1,7 +1,7 @@
 const { Receta, RecetaItem, Medicamento, Paciente, Medico, sequelize } = require('../models');
 
 async function createReceta(req, res) {
-    const { pacienteId, motivo, medicamentos } = req.body;
+    const { pacienteId, motivo, fecha, medicamentos } = req.body;
     const medicoId = req.user.id;
 
     const t = await sequelize.transaction();
@@ -12,7 +12,7 @@ async function createReceta(req, res) {
             medico_id: medicoId,
             paciente_id: pacienteId,
             motivo: motivo,
-            fecha: new Date()
+            fecha: fecha || new Date() // Usa la fecha del form, o la actual si no viene
         }, { transaction: t });
 
         // 2. Crear o encontrar los medicamentos y los items de la receta
@@ -52,7 +52,7 @@ async function getRecetaForPrint(req, res) {
             where: { id: recetaId, medico_id: medicoId },
             include: [
                 { model: Medico, attributes: ['nombre'] },
-                { model: Paciente, attributes: ['nombre'] },
+                { model: Paciente, attributes: ['nombre', 'fecha_nacimiento', 'genero'] },
                 { 
                     model: RecetaItem,
                     include: [{ model: Medicamento, attributes: ['nombre'] }]

@@ -125,6 +125,12 @@ header nav a {
     display: flex;
     flex-direction: column;
 }
+
+/* Ajuste para que Choices.js tenga espacio */
+.choices {
+    margin-bottom: 0;
+}
+
 .med-dosis { grid-area: dosis; display: flex; }
 .med-posologia { grid-area: posologia; display: flex; }
 
@@ -161,36 +167,27 @@ header nav a {
     background-color: #c82333;
 }
 
-/* Estilos para el autocompletado de medicamentos */
-.autocomplete-container {
-    position: relative;
+/* --- Estilos para el dashboard --- */
+#pacientes-lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.autocomplete-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    z-index: 100;
-    max-height: 200px;
-    overflow-y: auto;
+.paciente-info {
+    display: flex;
+    flex-direction: column;
 }
 
-.autocomplete-item {
-    padding: 10px;
-    cursor: pointer;
+.paciente-nombre {
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
-.autocomplete-item:hover {
-    background-color: #f0f0f0;
-}
-
-.autocomplete-item:not(:last-child) {
-    border-bottom: 1px solid #eee;
+.paciente-detalles {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 4px;
 }
 
 /* --- Añade esto a tu archivo public/css/styles.css --- */

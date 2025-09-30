@@ -12,10 +12,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     listHtml = '<li class="no-pacientes">No tienes pacientes asignados. ¡Agrega uno nuevo!</li>';
                 } else {
                     pacientes.forEach(paciente => {
+                        let detalles = [];
+                        if (paciente.fecha_nacimiento) {
+                            const hoy = new Date();
+                            const fechaNac = new Date(paciente.fecha_nacimiento);
+                            let edad = hoy.getFullYear() - fechaNac.getFullYear();
+                            const m = hoy.getMonth() - fechaNac.getMonth();
+                            if (m < 0 || (m === 0 && hoy.getDate() < fechaNac.getDate())) {
+                                edad--;
+                            }
+                            detalles.push(`${edad} años`);
+                        }
+                        if (paciente.genero) {
+                            detalles.push(paciente.genero);
+                        }
+
                         listHtml += `
                             <li data-paciente-id="${paciente.id}">
                                 <div class="paciente-info">
                                     <span class="paciente-nombre">${paciente.nombre}</span>
+                                    <span class="paciente-detalles">${detalles.join(' - ')}</span>
                                 </div>
                                 <div class="paciente-acciones">
                                     <button class="btn-seleccionar">Seleccionar</button>

@@ -43,10 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/medicamentos');
             if (response.ok) {
                 listaMedicamentos = await response.json();
-                // Actualizar cualquier campo de medicamento ya existente
-                document.querySelectorAll('datalist[id^="medicamentos-list-"]').forEach(datalist => {
-                    datalist.innerHTML = listaMedicamentos.map(med => `<option value="${med.nombre}"></option>`).join('');
-                });
             }
         } catch (error) {
             console.error('Error al cargar la lista de medicamentos:', error);
@@ -54,15 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const addMedicamentoField = () => {
-        const fieldId = Date.now(); // ID único para el campo
         const div = document.createElement('div');
         div.classList.add('medicamento-field');
         div.innerHTML = `
-            <div class="input-group med-nombre autocomplete-container">
-                <input type="text" name="medicamentoNombre" class="medicamento-search" placeholder="Escriba para buscar medicamento..." required autocomplete="off">
-                <div class="autocomplete-results"></div>
+            <div class="input-group med-nombre">
+                <select name="medicamentoNombre" class="medicamento-select" placeholder="Buscar o añadir medicamento..."></select>
             </div>
-
             <div class="input-group med-dosis">
                 <input type="number" name="dosis_cantidad" placeholder="Cant." required>
                 <select name="dosis_unidad">
@@ -93,44 +86,34 @@ document.addEventListener('DOMContentLoaded', () => {
             <button type="button" class="remove-medicamento-btn">Eliminar</button>
         `;
         medicamentosContainer.appendChild(div);
+
+        // Inicializar Choices.js en el nuevo select
+        const choicesInstance = new Choices(div.querySelector('.medicamento-select'), {
+            allowHTML: false,
+            removeItemButton: false, // Se ve mejor sin el botón de quitar en este contexto
+            searchPlaceholderValue: "Buscar o añadir...",
+            noResultsText: 'No hay resultados, presiona Enter para añadir',
+            items: [],
+            // Se establece la lista de opciones aquí
+            choices: listaMedicamentos.map(med => ({ value: med.nombre, label: med.nombre }))
+        });
+
+        // Hacemos que la instancia sea accesible para poder destruirla si es necesario
+        div.querySelector('.medicamento-select').choices = choicesInstance;
+
+        // Evento para añadir un nuevo medicamento a la lista global si no existe
+        choicesInstance.passedElement.element.addEventListener('addItem', function(event) {
+            const exists = listaMedicamentos.some(med => med.nombre === event.detail.value);
+            if (!exists) {
+                listaMedicamentos.push({ nombre: event.detail.value });
+                // Opcional: podrías actualizar otros selectores si fuera necesario
+            }
+        });
     };
     
     medicamentosContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove-medicamento-btn')) {
             e.target.parentElement.remove();
-        }
-    });
-
-    // --- Lógica del Autocompletado de Medicamentos ---
-    medicamentosContainer.addEventListener('input', (e) => {
-        if (e.target.classList.contains('medicamento-search')) {
-            const input = e.target;
-            const resultsContainer = input.nextElementSibling;
-            const query = input.value.toLowerCase();
-
-            resultsContainer.innerHTML = '';
-            if (query.length > 0) {
-                const filteredMeds = listaMedicamentos.filter(med => med.nombre.toLowerCase().includes(query));
-                
-                filteredMeds.forEach(med => {
-                    const resultItem = document.createElement('div');
-                    resultItem.classList.add('autocomplete-item');
-                    resultItem.textContent = med.nombre;
-                    resultItem.addEventListener('click', () => {
-                        input.value = med.nombre;
-                        resultsContainer.innerHTML = '';
-                    });
-                    resultsContainer.appendChild(resultItem);
-                });
-            }
-        }
-    });
-
-    // Ocultar resultados si se hace clic fuera
-    document.addEventListener('click', (e) => {
-        const openAutocomplete = document.querySelector('.autocomplete-results:not(:empty)');
-        if (openAutocomplete && !e.target.closest('.autocomplete-container')) {
-            openAutocomplete.innerHTML = '';
         }
     });
 
@@ -141,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(recetaForm);
         const pacienteId = formData.get('pacienteId');
         const motivo = formData.get('motivo');
+        const fecha = formData.get('fecha');
 
         const medicamentos = [];
         const medicamentoFields = medicamentosContainer.querySelectorAll('.medicamento-field');
@@ -151,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const posologia_duracion = field.querySelector('[name="posologia_duracion"]').value;
 
             medicamentos.push({
-                nombre: field.querySelector('[name="medicamentoNombre"]').value,
+                nombre: field.querySelector('.medicamento-select').value,
                 dosis: `${dosis_cantidad} ${dosis_unidad}`,
                 posologia: `${posologia_frecuencia} ${posologia_duracion}`.trim()
             });
@@ -161,13 +145,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/recetas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pacienteId, motivo, medicamentos })
+                body: JSON.stringify({ pacienteId, motivo, fecha, medicamentos })
             });
 
             if (response.ok) {
                 const nuevaReceta = await response.json();
                 window.open(`/print_receta.html?id=${nuevaReceta.id}`, '_blank');
-                recetaForm.reset();
+                
+                // Limpiar campos específicos en lugar de resetear todo el formulario
+                recetaForm.querySelector('#motivo').value = '';
+                recetaForm.querySelector('#receta-fecha').valueAsDate = new Date();
+
+                // Destruir las instancias de Choices.js antes de limpiar el contenedor
+                medicamentosContainer.querySelectorAll('.medicamento-select').forEach(select => {
+                    if (select.choices) {
+                        select.choices.destroy();
+                    }
+                });
                 medicamentosContainer.innerHTML = '';
                 addMedicamentoField();
             } else {
@@ -213,13 +207,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enviar formulario del modal
     modalForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const nombre = modalPacienteNombre.value;
+        const formData = new FormData(modalForm);
+        const data = {
+            nombre: formData.get('nombre'),
+            fecha_nacimiento: formData.get('fecha_nacimiento'),
+            genero: formData.get('genero')
+        };
 
         try {
             const response = await fetch('/pacientes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre })
+                body: JSON.stringify(data)
             });
             const nuevoPaciente = await response.json();
 
@@ -245,6 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const init = async () => {
         await cargarPacientes();
         await cargarListaMedicamentos();
+        // Poner la fecha de hoy por defecto
+        document.getElementById('receta-fecha').valueAsDate = new Date();
         addMedicamentoField(); // Agregar el primer campo de medicamento por defecto
     };
 

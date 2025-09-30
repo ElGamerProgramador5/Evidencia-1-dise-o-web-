@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     addPacienteForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nombre = document.getElementById('nombre').value;
+        const fecha_nacimiento = document.getElementById('fecha_nacimiento').value;
+        const genero = document.getElementById('genero').value;
 
         try {
             const response = await fetch('/pacientes', {
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ nombre })
+                body: JSON.stringify({ nombre, fecha_nacimiento, genero })
             });
 
             const result = await response.json();

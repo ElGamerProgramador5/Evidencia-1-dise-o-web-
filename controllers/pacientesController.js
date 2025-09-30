@@ -9,7 +9,7 @@ async function getMisPacientes(req, res) {
                 where: { medico_id: medicoId },
                 attributes: []
             }],
-            attributes: ['id', 'nombre'],
+            attributes: ['id', 'nombre', 'fecha_nacimiento', 'genero'],
             order: [['nombre', 'ASC']]
         });
         res.json(pacientes);

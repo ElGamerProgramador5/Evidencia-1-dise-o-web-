@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const recetaFechaEl = document.getElementById('receta-fecha');
     const pacienteNombreEl = document.getElementById('paciente-nombre');
     const medicamentosListaEl = document.getElementById('medicamentos-lista');
+    const pacienteFechaNacimientoEl = document.getElementById('paciente-fecha-nacimiento');
+    const pacienteGeneroEl = document.getElementById('paciente-genero');
 
     const cargarDatosReceta = async () => {
         document.body.innerHTML = '<h1>Generando PDF, por favor espere...</h1>';
@@ -17,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     medicoNombreEl.textContent = receta.Medico.nombre;
                     pacienteNombreEl.textContent = receta.Paciente.nombre;
+                    pacienteFechaNacimientoEl.textContent = receta.Paciente.fecha_nacimiento ? new Date(receta.Paciente.fecha_nacimiento).toLocaleDateString('es-ES') : 'No especificada';
+                    pacienteGeneroEl.textContent = receta.Paciente.genero || 'No especificado';
                     recetaFechaEl.textContent = new Date(receta.fecha).toLocaleDateString('es-ES');
 
                     let medicamentosHtml = '';
