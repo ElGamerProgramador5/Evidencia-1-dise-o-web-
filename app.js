@@ -1,57 +1,28 @@
 require('dotenv').config();
-
-const { Receta, Medico, Paciente, RecetaItem, Medicamento } = require('./models'); // si quieres usar datos
-
-
-console.log('DB_USER:', process.env.DB_USER);
-console.log('DB_PASS:', process.env.DB_PASS);
-console.log('DB_NAME:', process.env.DB_NAME);
-console.log('DB_HOST:', process.env.DB_HOST);
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { sequelize } = require('./models');
+const path = require('path');
 
 const app = express();
+
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
 
-// Rutas
+// Servir archivos estáticos desde la carpeta 'public'
+app.use(express.static(path.join(__dirname, 'public')));
 
-
-// Ruta principal
-app.get('/', async (req, res) => {
-  try {
-    const receta = await Receta.findOne({
-  include: [
-    Medico,
-    Paciente,
-    { 
-      model: RecetaItem, 
-      include: [Medicamento]  // <-- incluir Medicamento dentro de cada item
-    }
-  ]
-});
-
-    res.render('print_receta', {
-      receta,
-      medico: receta.Medico,
-      paciente: receta.Paciente,
-      items: receta.RecetaItems
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error al cargar la receta');
-  }
-});
-
-
-
+// Rutas de la API
 app.use('/auth', require('./routes/auth'));
 app.use('/pacientes', require('./routes/pacientes'));
-app.use('/recetas', require('./routes/recetas'));
+app.use('/recetas',require('./routes/recetas'));
+
+// Ruta principal que sirve el login
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
 
 // Levantar servidor
 const PORT = process.env.PORT || 3000;

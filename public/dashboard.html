@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gestión de Consultas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Gestión de Consultas</h1>
+        <nav>
+            <a href="#pacientes">Pacientes</a>
+            <a href="#recetas">Crear Receta</a>
+            <button id="logout-btn">Cerrar Sesión</button>
+        </nav>
+    </header>
+    <main class="container">
+        <section id="pacientes">
+            <h2>Mis Pacientes</h2>
+            <!-- Aquí se listarán los pacientes del médico -->
+        </section>
+        <section id="recetas">
+            <h2>Crear Nueva Receta</h2>
+            <form id="receta-form">
+                <div class="input-group">
+                    <label for="paciente-select">Paciente</label>
+                    <select id="paciente-select" name="pacienteId" required></select>
+                </div>
+                <div class="input-group">
+                    <label for="motivo">Motivo de la consulta</label>
+                    <textarea id="motivo" name="motivo" rows="3"></textarea>
+                </div>
+                
+                <h3>Medicamentos</h3>
+                <div id="medicamentos-container">
+                    <!-- Aquí se agregarán dinámicamente los campos de medicamentos -->
+                </div>
+                <button type="button" id="add-medicamento-btn">Agregar Medicamento</button>
+                
+                <button type="submit">Crear Receta</button>
+            </form>
+        </section>
+    </main>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

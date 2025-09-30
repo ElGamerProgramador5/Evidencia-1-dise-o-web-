@@ -15,4 +15,9 @@ async function login(req, res) {
   res.json({ msg: 'Login exitoso' });
 }
 
-module.exports = { login };
+async function logout(req, res) {
+  res.clearCookie('token');
+  res.json({ msg: 'Logout exitoso' });
+}
+
+module.exports = { login, logout };
