@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Receta - Gestión de Consultas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Crear Nueva Receta</h1>
+        <nav>
+            <a href="/dashboard.html">Volver al Dashboard</a>
+            <button id="logout-btn">Cerrar Sesión</button>
+        </nav>
+    </header>
+    <main class="container">
+        <section id="recetas">
+            <form id="receta-form">
+                <div class="input-group">
+                    <label for="paciente-select">Paciente</label>
+                    <select id="paciente-select" name="pacienteId" required></select>
+                </div>
+                <div class="input-group">
+                    <label for="motivo">Motivo de la consulta</label>
+                    <textarea id="motivo" name="motivo" rows="3"></textarea>
+                </div>
+                
+                <h3>Medicamentos</h3>
+                <div id="medicamentos-container">
+                    <!-- Aquí se agregarán dinámicamente los campos de medicamentos -->
+                </div>
+                <button type="button" id="add-medicamento-btn">Agregar Medicamento</button>
+                
+                <button type="submit">Crear Receta</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Modal para agregar nuevo paciente -->
+    <div id="add-paciente-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Agregar Nuevo Paciente</h2>
+            <form id="modal-add-paciente-form">
+                <div class="input-group">
+                    <label for="modal-paciente-nombre">Nombre Completo</label>
+                    <input type="text" id="modal-paciente-nombre" required>
+                </div>
+                <button type="submit">Guardar Paciente</button>
+            </form>
+            <div id="modal-message"></div>
+        </div>
+    </div>
+
+    <script src="js/crear-receta.js"></script>
+</body>
+</html>

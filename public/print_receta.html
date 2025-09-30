@@ -4,32 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receta Médica</title>
-    <link rel="stylesheet" href="css/print.css">
+    <link rel="stylesheet" href="css/print-styles.css">
+    <!-- Librería para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div class="receta-container">
-        <header>
-            <div class="medico-info">
-                <h2>Dr. <span id="medico-nombre"></span></h2>
-                <p>Médico Cirujano</p>
+    <div id="receta-container">
+        <header class="receta-header">
+            <div>
+                <h1>Receta Médica</h1>
+                <p><strong>Dr(a). <span id="medico-nombre">Cargando...</span></strong></p>
             </div>
-            <div class="fecha-info">
-                <p>Fecha: <span id="receta-fecha"></span></p>
+            <div class="receta-fecha">
+                <p><strong>Fecha:</strong> <span id="receta-fecha">Cargando...</span></p>
             </div>
         </header>
-        <hr>
         <main>
-            <div class="paciente-info">
-                <h3>Paciente: <span id="paciente-nombre"></span></h3>
-            </div>
-            <div class="medicamentos-list">
-                <h4>Prescripción</h4>
-                <ul id="medicamentos-lista"></ul>
-            </div>
+            <section class="paciente-info">
+                <h2>Datos del Paciente</h2>
+                <p><strong>Nombre:</strong> <span id="paciente-nombre">Cargando...</span></p>
+            </section>
+            <section class="medicamentos-info">
+                <h2>Prescripción</h2>
+                <ul id="medicamentos-lista">
+                    <!-- Los medicamentos se cargarán aquí -->
+                </ul>
+            </section>
         </main>
-        <footer>
-            <p>Firma del Médico</p>
-        </footer>
     </div>
     <script src="js/print.js"></script>
 </body>

@@ -1,27 +1,40 @@
-const { Paciente, Medico } = require('../models');
+const { MedicoPaciente, Paciente, Receta, sequelize } = require('../models');
 
-async function crearPaciente(req, res) {
-  const { nombre, fecha_nacimiento, genero } = req.body;
-  // TODO: Asociar el paciente al médico logueado
-  const paciente = await Paciente.create({ nombre, fecha_nacimiento, genero });
-  res.status(201).json(paciente);
-}
-
-async function listarPacientes(req, res) {
-  try {
-    const medico = await Medico.findByPk(req.user.id, {
-      include: [Paciente]
-    });
-
-    if (!medico) {
-      return res.status(404).json({ message: 'Médico no encontrado' });
+async function getMisPacientes(req, res) {
+    try {
+        const medicoId = req.user.id;
+        const pacientes = await Paciente.findAll({
+            include: [{
+                model: MedicoPaciente,
+                where: { medico_id: medicoId },
+                attributes: []
+            }],
+            attributes: ['id', 'nombre'],
+            order: [['nombre', 'ASC']]
+        });
+        res.json(pacientes);
+    } catch (error) {
+        console.error('Error al obtener pacientes:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
     }
-
-    res.json(medico.Pacientes);
-  } catch (error) {
-    console.error('Error al listar pacientes:', error);
-    res.status(500).json({ message: 'Error interno del servidor' });
-  }
 }
 
-module.exports = { crearPaciente, listarPacientes };
+async function darDeAltaPaciente(req, res) {
+    try {
+        const medicoId = req.user.id;
+        const pacienteId = req.params.id;
+
+        await MedicoPaciente.destroy({
+            where: {
+                medico_id: medicoId,
+                paciente_id: pacienteId
+            }
+        });
+        res.status(200).json({ message: 'Paciente dado de alta correctamente.' });
+    } catch (error) {
+        console.error('Error al dar de alta al paciente:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+}
+
+module.exports = { getMisPacientes, darDeAltaPaciente };

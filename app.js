@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', require('./routes/auth'));
 app.use('/pacientes', require('./routes/pacientes'));
 app.use('/recetas',require('./routes/recetas'));
+app.use('/medicamentos', require('./routes/medicamentos'));
 
 // Ruta principal que sirve el login
 app.get('/', (req, res) => {

@@ -1,0 +1,70 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+#receta-container {
+    width: 8.5in;
+    min-height: 11in;
+    padding: 1in;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+.receta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+.receta-header h1 {
+    margin: 0;
+    color: #007bff;
+    font-size: 28px;
+}
+
+.receta-header p, .paciente-info p {
+    margin: 5px 0 0;
+    font-size: 14px;
+}
+
+.receta-fecha {
+    text-align: right;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 18px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+#medicamentos-lista {
+    list-style: none;
+    padding-left: 0;
+}
+
+#medicamentos-lista li {
+    padding: 10px 0;
+    font-size: 14px;
+    border-bottom: 1px dotted #ccc;
+}
+
+#medicamentos-lista li:last-child {
+    border-bottom: none;
+}
+
+#medicamentos-lista strong {
+    color: #000;
+}

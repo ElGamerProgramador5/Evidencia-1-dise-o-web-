@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { crearReceta, imprimirReceta } = require('../controllers/recetasController');
-const { authenticateToken } = require('../middleware/auth');
+const { createReceta, getRecetaForPrint } = require('../controllers/recetasController');
+const { authenticateToken } = require('../middleware/authMiddleware');
 
 router.use(authenticateToken);
 
-router.post('/', crearReceta);
-router.get('/:id/print', imprimirReceta);
+router.post('/', createReceta);
+router.get('/:id/print', getRecetaForPrint);
 
 module.exports = router;

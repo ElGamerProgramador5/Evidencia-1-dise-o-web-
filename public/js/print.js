@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const recetaContainer = document.getElementById('receta-container');
     const medicoNombreEl = document.getElementById('medico-nombre');
     const recetaFechaEl = document.getElementById('receta-fecha');
     const pacienteNombreEl = document.getElementById('paciente-nombre');
     const medicamentosListaEl = document.getElementById('medicamentos-lista');
 
     const cargarDatosReceta = async () => {
+        document.body.innerHTML = '<h1>Generando PDF, por favor espere...</h1>';
         const recetaId = new URLSearchParams(window.location.search).get('id');
 
         if (recetaId) {
@@ -27,8 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     medicamentosListaEl.innerHTML = medicamentosHtml;
 
-                    // Opcional: abrir diálogo de impresión automáticamente
-                    // window.print();
+                    // Generar el PDF
+                    const opt = {
+                        margin:       1,
+                        filename:     `receta-${receta.Paciente.nombre.replace(/\s/g, '_')}-${receta.id}.pdf`,
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { scale: 2 },
+                        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+                    html2pdf().from(recetaContainer).set(opt).save().then(() => { window.close(); });
 
                 } else {
                     document.body.innerHTML = '<h1>Error al cargar la receta. Verifique que tiene permiso para verla.</h1>';

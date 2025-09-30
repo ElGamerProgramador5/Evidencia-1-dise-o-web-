@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Paciente - Gestión de Consultas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Agregar Nuevo Paciente</h1>
+        <nav>
+            <a href="/dashboard.html">Volver al Dashboard</a>
+            <button id="logout-btn">Cerrar Sesión</button>
+        </nav>
+    </header>
+    <main class="container">
+        <form id="add-paciente-form">
+            <div class="input-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <button type="submit">Agregar Paciente</button>
+        </form>
+        <div id="message"></div>
+    </main>
+    <script src="js/agregar-paciente.js"></script>
+</body>
+</html>
